@@ -12,6 +12,8 @@ def post_list(request):
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
+    post.views +=1
+    post.save()
     return render(request, 'blog/post_detail.html', {'post': post})
 
 @login_required
@@ -57,6 +59,13 @@ def post_remove(request, pk):
     post = get_object_or_404(Post, pk=pk)
     post.delete()
     return redirect('post_list')
+
+def post_like(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    post.likes += 1
+    post.save()
+
+    return redirect('post_detail', pk=post.pk)
 
 def add_comment_to_post(request, pk):
     post = get_object_or_404(Post, pk=pk)
