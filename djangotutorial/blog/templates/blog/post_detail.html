@@ -15,12 +15,26 @@
 		{% endif %}
         <h2>{{ post.title }}</h2>
         <p>{{ post.text|linebreaksbr }}</p>
-        <div class="date">
-            {{ post.views}} views
+        <div class="date heart">
+            {{ post.views}} views &nbsp; | &nbsp; 
             <a href="{% url 'post_like' pk=post.pk %}">
-             S2 
+                {% if liked %}
+                     <span class="glyphicon glyphicon-thumbs-up liked"></span>
+                {% else %}
+                    <span class="glyphicon glyphicon-thumbs-up"></span>
+                {% endif %} 
+
             </a>
-           {{ post.likes}}
+            &nbsp; -- &nbsp; 
+            <a href="{% url 'post_like' pk=post.pk %}">
+               {% if not liked %}
+                     <span class="glyphicon glyphicon-thumbs-down liked"></span>
+                {% else %}
+                    <span class="glyphicon glyphicon-thumbs-down"></span>
+                {% endif %}
+            </a>
+            &nbsp; | &nbsp; 
+            {{ percent|floatformat:2 }} %
         </div>
     </div>
 
