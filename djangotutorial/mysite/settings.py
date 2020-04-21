@@ -1,3 +1,5 @@
+from .local_settings import *
+
 """
 Django settings for mysite project.
 
