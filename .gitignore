@@ -5,3 +5,4 @@ myvenv
 db.sqlite3
 /static
 .DS_Store
+djangotutorial/mysite/local_settings.py
