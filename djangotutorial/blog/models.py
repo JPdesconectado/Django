@@ -24,6 +24,9 @@ class Post(models.Model):
     def likes_count(self):
         return PostLike.objects.filter(post=self).count()
 
+    def dislikes_count(self):
+        return PostDislike.objects.filter(post=self).count()
+
 class PostLike(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey('blog.Post', on_delete=models.CASCADE)
@@ -32,7 +35,13 @@ class PostLike(models.Model):
     def __str__ (self):
         return '{} - {}' .format(self.post.title, self.user)
 
+class PostDislike(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey('blog.Post', on_delete=models.CASCADE)
+    created_date = models.DateTimeField(auto_now=True)
 
+    def __str__ (self):
+        return '{} - {}' .format(self.post.title, self.user)
 
 
 class Comment(models.Model):

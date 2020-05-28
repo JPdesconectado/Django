@@ -26,8 +26,8 @@
 
             </a>
             &nbsp; -- &nbsp; 
-            <a href="{% url 'post_like' pk=post.pk %}">
-               {% if not liked %}
+            <a href="{% url 'post_dislike' pk=post.pk %}">
+               {% if disliked %}
                      <span class="glyphicon glyphicon-thumbs-down liked"></span>
                 {% else %}
                     <span class="glyphicon glyphicon-thumbs-down"></span>

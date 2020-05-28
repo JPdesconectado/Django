@@ -1,0 +1,17 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+
+	<h1 class="text-center"> Ajude a decidir as novas funcionalidades a serem implementadas!</h1>
+	<p>{{ post.text|linebreaksbr }}</p>
+    {% if latest_question_list %}
+        <ul>
+        {% for question in latest_question_list %}
+            <li class="text-center"><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
+            <p>{{ post.text|linebreaksbr }}</p>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No polls are available.</p>
+    {% endif %}
+{% endblock %}

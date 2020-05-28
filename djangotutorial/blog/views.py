@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.utils import timezone
-from .models import Post, Comment, PostLike
+from .models import Post, Comment, PostLike, PostDislike
 from django.shortcuts import render, get_object_or_404
 from .forms import PostForm, CommentForm
 from django.shortcuts import redirect
@@ -15,18 +15,31 @@ def post_detail(request, pk):
     post.views +=1
     post.save()
     liked = False
-
+    disliked = False
     if request.user.is_authenticated:
         likes_count = PostLike.objects.filter(post_id=pk, user=request.user).count()
-        
-        if likes_count > 0:
+        dislikes_count = PostDislike.objects.filter(post_id=pk, user=request.user).count()
+
+        if likes_count == 0 and dislikes_count == 0:
+        	liked = False
+        	disliked = False
+
+       	elif likes_count == 1:
             liked = True
+            disliked = False
 
+        else:
+        	liked = False
+        	disliked = True
 
-    percent = 0
+    
+    if post.dislikes_count() == 0 and post.likes_count() == 0:
+    	percent = 0
 
+    else:
+    	percent = (post.likes_count() / (post.dislikes_count() + post.likes_count())) * 100
 
-    return render(request, 'blog/post_detail.html', {'post': post, 'liked': liked, 'percent': percent})
+    return render(request, 'blog/post_detail.html', {'post': post, 'liked': liked, 'disliked': disliked, 'percent': percent})
 
 @login_required
 def post_new(request):
@@ -74,9 +87,21 @@ def post_remove(request, pk):
 
 @login_required
 def post_like(request, pk):
-    post_like, created = PostLike.objects.get_or_create(post_id=pk, user=request.user)
+	dislikes_count = PostDislike.objects.filter(post_id=pk, user=request.user).count()
 
-    return redirect('post_detail', pk=pk)
+	if dislikes_count == 0:
+		post_like, created = PostLike.objects.get_or_create(post_id=pk, user=request.user)
+
+	return redirect('post_detail', pk=pk)
+
+@login_required
+def post_dislike(request, pk):
+	likes_count = PostLike.objects.filter(post_id=pk, user=request.user).count()
+
+	if likes_count == 0:
+		post_dislike, created = PostDislike.objects.get_or_create(post_id=pk, user=request.user)
+
+	return redirect('post_detail', pk=pk)
 
 def add_comment_to_post(request, pk):
     post = get_object_or_404(Post, pk=pk)
